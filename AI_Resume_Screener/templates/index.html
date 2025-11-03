@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Resume Screener</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>AI Resume Screener</h1>
+    <p>Analyze and shortlist resumes based on job descriptions using NLP.</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label for="job_description">Job Description</label>
+        <textarea name="job_description" placeholder="Paste job description here..." required></textarea>
+
+        <label for="resumes">Upload Resumes (PDF files)</label>
+        <input type="file" name="resumes" multiple required>
+
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if results %}
+    <div class="results">
+        <h2>Resume Screening Results</h2>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Resume Name</th>
+                <th>Match %</th>
+                <th>Status</th>
+            </tr>
+            {% for res in results %}
+            <tr class="{{ 'selected' if res.status == 'Selected' else 'rejected' }}">
+                <td>{{ loop.index }}</td>
+                <td>{{ res.filename }}</td>
+                <td>{{ res.score }}%</td>
+                <td class="status">{{ res.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
